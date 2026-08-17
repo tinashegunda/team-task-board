@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Build / coverage
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Prisma / SQLite
+prisma/*.db
+prisma/*.db-journal
+*.db
+*.db-journal
+
+# Logs & OS
+*.log
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Frontend tooling
+frontend/dist/
+.vite/
