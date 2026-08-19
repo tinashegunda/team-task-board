@@ -3,6 +3,7 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import { TaskList } from './components/TaskList.tsx'
 
 function App() {
   return (
@@ -15,9 +16,7 @@ function App() {
         </Toolbar>
       </AppBar>
       <Container maxWidth="lg" sx={{ py: 3 }}>
-        <Typography color="text.secondary">
-          Task list will go here.
-        </Typography>
+        <TaskList />
       </Container>
     </Box>
   )
