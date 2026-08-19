@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -13,7 +14,7 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { useGetTasksQuery, useGetUsersQuery, useUpdateTaskStatusMutation } from '../store/api.ts'
+import { useDeleteTaskMutation, useGetTasksQuery, useGetUsersQuery, useUpdateTaskStatusMutation } from '../store/api.ts'
 import type { ListTasksQuery, TaskStatus } from '../store/types.ts'
 
 const statuses: TaskStatus[] = ['TODO', 'IN_PROGRESS', 'DONE']
@@ -29,6 +30,7 @@ export function TaskList() {
   const [assigneeId, setAssigneeId] = useState('')
   const { data: users = [] } = useGetUsersQuery()
   const [updateTaskStatus] = useUpdateTaskStatusMutation()
+  const [deleteTask] = useDeleteTaskMutation()
 
   const query: ListTasksQuery = {
     ...(status ? { status } : {}),
@@ -90,6 +92,7 @@ export function TaskList() {
                 <TableCell>Description</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Assignee</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -118,11 +121,28 @@ export function TaskList() {
                       </Select>
                     </TableCell>
                     <TableCell>{task.assignee.name}</TableCell>
+                    <TableCell>
+                      <Button
+                        size="small"
+                        color="error"
+                        onClick={() => {
+                          if (
+                            window.confirm(
+                              `Delete “${task.title}”? This cannot be undone.`,
+                            )
+                          ) {
+                            void deleteTask(task.id)
+                          }
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4}>No tasks yet.</TableCell>
+                  <TableCell colSpan={5}>No tasks yet.</TableCell>
                 </TableRow>
               )}
             </TableBody>
