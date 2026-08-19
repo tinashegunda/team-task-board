@@ -21,3 +21,14 @@ export type ListTasksQuery = {
   status?: TaskStatus
   assigneeId?: string
 }
+
+export type CreateTaskPayload = {
+  title: string
+  description?: string
+  assigneeId: string
+}
+
+export type UpdateTaskStatusPayload = {
+  id: string
+  status: TaskStatus
+}
