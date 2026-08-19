@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import Alert from '@mui/material/Alert'
-import Chip from '@mui/material/Chip'
 import CircularProgress from '@mui/material/CircularProgress'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
@@ -14,8 +13,10 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import { useGetTasksQuery, useGetUsersQuery } from '../store/api.ts'
+import { useGetTasksQuery, useGetUsersQuery, useUpdateTaskStatusMutation } from '../store/api.ts'
 import type { ListTasksQuery, TaskStatus } from '../store/types.ts'
+
+const statuses: TaskStatus[] = ['TODO', 'IN_PROGRESS', 'DONE']
 
 const statusLabel: Record<TaskStatus, string> = {
   TODO: 'To do',
@@ -27,6 +28,7 @@ export function TaskList() {
   const [status, setStatus] = useState<TaskStatus | ''>('')
   const [assigneeId, setAssigneeId] = useState('')
   const { data: users = [] } = useGetUsersQuery()
+  const [updateTaskStatus] = useUpdateTaskStatusMutation()
 
   const query: ListTasksQuery = {
     ...(status ? { status } : {}),
@@ -50,9 +52,11 @@ export function TaskList() {
             }
           >
             <MenuItem value="">All</MenuItem>
-            <MenuItem value="TODO">{statusLabel.TODO}</MenuItem>
-            <MenuItem value="IN_PROGRESS">{statusLabel.IN_PROGRESS}</MenuItem>
-            <MenuItem value="DONE">{statusLabel.DONE}</MenuItem>
+            {statuses.map((value) => (
+              <MenuItem key={value} value={value}>
+                {statusLabel[value]}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
         <FormControl size="small" sx={{ minWidth: 220 }}>
@@ -95,7 +99,23 @@ export function TaskList() {
                     <TableCell>{task.title}</TableCell>
                     <TableCell>{task.description}</TableCell>
                     <TableCell>
-                      <Chip size="small" label={statusLabel[task.status]} />
+                      <Select
+                        size="small"
+                        value={task.status}
+                        onChange={(event) => {
+                          void updateTaskStatus({
+                            id: task.id,
+                            status: event.target.value as TaskStatus,
+                          })
+                        }}
+                        inputProps={{ 'aria-label': `Status for ${task.title}` }}
+                      >
+                        {statuses.map((value) => (
+                          <MenuItem key={value} value={value}>
+                            {statusLabel[value]}
+                          </MenuItem>
+                        ))}
+                      </Select>
                     </TableCell>
                     <TableCell>{task.assignee.name}</TableCell>
                   </TableRow>
