@@ -4,6 +4,10 @@ Small full-stack task tracker for a take-home assessment: NestJS + Prisma (SQLit
 
 **Time spent:** ~4 hours of focused implementation (calendar time was longer because of review pauses between small commits).
 
+## AI usage
+
+I used Cursor for scaffolding (Nest/Vite), Prisma 7 adapter setup, and boilerplate. I chose the data model, API shape, and UI scope, wrote and adjusted the task service and tests, and reviewed every commit. Agent skill packs (Prisma skills under `.agents` / `.claude` / `.windsurf`) are local tooling and are not part of the submission.
+
 ## How to run
 
 Requires Node.js 22+.
@@ -72,4 +76,4 @@ erDiagram
 
 ## Decisions and tradeoffs
 
-I prioritized a clear Nest module/DTO/service split and a working UI against the real API over extra features. SQLite kept local setup to a copy of `.env` and a migrate/seed, which mattered more than production-grade Postgres for this exercise. REST was the default because the resource set is small and the assessment did not ask for GraphQL. The board is a filterable table with status selects instead of drag-and-drop so the interaction stays obvious and testable. Auth is omitted as specified; seeded users exist only so assignee filters have something to bind to. Prisma 7 requires a driver adapter, so the Nest `PrismaService` and seed script both use `@prisma/adapter-better-sqlite3`. On the frontend, RTK Query holds task/user state so list, create, status update, and delete all invalidate the same cache. Shortcuts I would revisit with more time: `window.confirm` for delete, no pagination, no e2e tests, and the default Nest hello controller left in place because it was not worth a dedicated cleanup pass.
+I prioritized a clear Nest module/DTO/service split and a working UI against the real API over extra features. SQLite kept local setup to a copy of `.env` and a migrate/seed, which mattered more than production-grade Postgres for this exercise. REST was the default because the resource set is small and the assessment did not ask for GraphQL. The board is a filterable table with status selects instead of drag-and-drop so the interaction stays obvious and testable. Auth is omitted as specified; seeded users exist only so assignee filters have something to bind to. Prisma 7 requires a driver adapter, so the Nest `PrismaService` and seed script both use `@prisma/adapter-better-sqlite3`. On the frontend, RTK Query holds task/user state so list, create, status update, and delete all invalidate the same cache. Shortcuts I would revisit with more time: no pagination, no e2e tests, and the default Nest hello controller left in place because it was not worth a dedicated cleanup pass.
